@@ -7,8 +7,8 @@ const newUserRegistration = async (req, res, next) => {
         password = encryptPassword(password);
         await createUser({ ...req.body, password });
         res.status(201).json({ message: 'Sucessfully created user' }) ;
-    } catch (e) {
-        res.status(400).json({ message: e.message });
+    } catch (error) {
+        next(error)
     }
 };
 
