@@ -17,12 +17,11 @@ const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const [result] = await getUserByEmail(email);
-        if(passwordValidation(password, result.password)) {
-            return res.status(200).json({ token: generateToken({ email, username: result.username }) });
+        if (!result || !passwordValidation(password, result.password)) {
+            return res.status(400).json({ error: 'Email or password is incorrect' });
 
         }
-        return res.status(400).json({ error: 'Email or password is incorrect' })
-        
+        return res.status(200).json({ token: generateToken({ userId: result.id, email, username: result.username }) });
     } catch (error) {
         next(error);
     }
